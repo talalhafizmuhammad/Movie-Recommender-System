@@ -1,15 +1,14 @@
 import pickle
+import joblib # type: ignore
 import streamlit as st  # type: ignore
 import requests  # type: ignore
 
-# 🔹 Fetch poster + extra movie details
 def fetch_movie_details(movie_id):
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US"
     data = requests.get(url).json()
     poster_path = data.get('poster_path')
     poster_url = "https://image.tmdb.org/t/p/w500/" + poster_path if poster_path else "https://via.placeholder.com/500x750?text=No+Image"
     
-    # Extract extra details
     title = data.get('title', 'Unknown Title')
     rating = data.get('vote_average', 'N/A')
     year = data.get('release_date', 'N/A')[:4] if data.get('release_date') else "N/A"
@@ -21,7 +20,6 @@ def fetch_movie_details(movie_id):
         "year": year
     }
 
-# 🔹 Recommendation function
 def recommend(movie):
     index = movies[movies['title'] == movie].index[0]
     distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
@@ -32,10 +30,8 @@ def recommend(movie):
         recommended_movies.append(movie_details)
     return recommended_movies
 
-# Page config
 st.set_page_config(page_title="Movie Recommender", page_icon="🎬", layout="wide")
 
-# Custom CSS
 st.markdown("""
     <style>
     .movie-card {
@@ -68,9 +64,8 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center; color: #FF4B4B;'>🎬 Movie Recommender System 🍿</h1>", unsafe_allow_html=True)
 st.write("")
 
-# Load data
 movies = pickle.load(open('movies.pkl','rb'))
-similarity = pickle.load(open('similarity_compressed.pkl','rb'))
+similarity = joblib.load("similarity_compressed.pkl")
 
 movie_list = movies['title'].values
 selected_movie = st.selectbox("🎥 Type or select a movie:", movie_list)
@@ -107,4 +102,3 @@ if st.button('😎 Get Recommendations'):
                 """,
                 unsafe_allow_html=True
             )
-
