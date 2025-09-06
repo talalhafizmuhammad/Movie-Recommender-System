@@ -70,7 +70,7 @@ st.write("")
 
 # Load data
 movies = pickle.load(open('movies.pkl','rb'))
-similarity = pickle.load(open('similarity.pkl','rb'))
+similarity = pickle.load(open('similarity_compressed.pkl','rb'))
 
 movie_list = movies['title'].values
 selected_movie = st.selectbox("🎥 Type or select a movie:", movie_list)
@@ -107,3 +107,4 @@ if st.button('😎 Get Recommendations'):
                 """,
                 unsafe_allow_html=True
             )
+
