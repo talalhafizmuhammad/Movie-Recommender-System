@@ -1,4 +1,4 @@
-import pickle
+import pickle # type: ignore
 import joblib # type: ignore
 import streamlit as st  # type: ignore
 import requests  # type: ignore
@@ -102,3 +102,4 @@ if st.button('😎 Get Recommendations'):
                 """,
                 unsafe_allow_html=True
             )
+
